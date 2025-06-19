@@ -8,7 +8,7 @@ load_dotenv()
 class RedditClient:
     def __init__(self, reddit_client: Reddit):
         self._reddit = reddit_client
-        self._database = PostgreSQLClient
+        self._database = PostgreSQLClient()
 
     @classmethod
     def from_env(cls):
@@ -26,6 +26,6 @@ class RedditClient:
                 self._database.add_post(
                     submission.id,
                     subreddit,
-                    submission.selftext,
-                    submission.title
+                    submission.title,
+                    submission.selftext
                 )
