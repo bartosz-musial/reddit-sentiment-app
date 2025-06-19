@@ -19,3 +19,13 @@ class RedditClient:
         )
 
         return cls(client)
+
+    def get_new_posts(self, subreddit: str, limit: int) -> None:
+        for submission in self._reddit.subreddit(subreddit).new(limit=limit):
+            if not self._database.post_exists(submission.id):
+                self._database.add_post(
+                    submission.id,
+                    subreddit,
+                    submission.selftext,
+                    submission.title
+                )
