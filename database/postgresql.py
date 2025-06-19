@@ -44,3 +44,10 @@ class PostgreSQLClient:
         )
 
         return self._cursor.fetchone() is not None
+
+    def add_post(self, post_id: str, subreddit: str, title: str, content: str) -> None:
+        self._cursor.execute(
+            "INSERT INTO posts (post_id, subreddit, title, content) VALUES (%s, %s, %s, %s)",
+            (post_id, subreddit, title, content)
+        )
+        self._conn.commit()
