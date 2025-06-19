@@ -36,3 +36,11 @@ class PostgreSQLClient:
             );
         ''')
         self._conn.commit()
+
+    def post_exists(self, post_id: str) -> bool:
+        self._cursor.execute(
+            "SELECT 1 FROM posts WHERE post_id = %s",
+            (post_id,)
+        )
+
+        return self._cursor.fetchone() is not None
