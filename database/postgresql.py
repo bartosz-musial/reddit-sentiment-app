@@ -16,7 +16,7 @@ class PostgreSQLClient:
         self._cursor = self._conn.cursor()
         self._create_table()
 
-    def _close(self):
+    def close(self) -> None:
         if self._cursor and not self._cursor.closed:
             self._cursor.close()
         if self._conn and not self._conn.closed:
