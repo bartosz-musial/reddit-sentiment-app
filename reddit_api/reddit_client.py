@@ -2,6 +2,10 @@ from praw import Reddit
 from dotenv import load_dotenv
 from database.postgresql import PostgreSQLClient
 import os
+import logging
+import logging_config
+
+logging_config.get_config()
 
 load_dotenv()
 
@@ -29,3 +33,4 @@ class RedditClient:
                     submission.title,
                     submission.selftext
                 )
+                logging.info(f"Added post {submission.id} from r/{subreddit}")
