@@ -52,3 +52,10 @@ class PostgreSQLClient:
             (post_id, created_at, subreddit, title, content)
         )
         self._conn.commit()
+
+    def update_post_sentiment(self, post_id: str, sentiment: str, model: str) -> None:
+        self._cursor.execute(
+            "UPDATE posts SET model_version = %s, sentiment = %s WHERE post_id = %s",
+            (model, sentiment, post_id)
+        )
+        self._conn.commit()
