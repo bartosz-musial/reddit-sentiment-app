@@ -56,7 +56,7 @@ class OpenRouter(ABC):
         if self._sentiment_validation(sentiment):
             self._storage.update_post_sentiment(post_id, sentiment, self._model)
         else:
-            raise ValueError(f"Invalid sentiment value returned: {sentiment}")
+            logging.warning(f"Invalid sentiment value returned: {sentiment}")
 
     @staticmethod
     def _sentiment_validation(sentiment: str) -> bool:
