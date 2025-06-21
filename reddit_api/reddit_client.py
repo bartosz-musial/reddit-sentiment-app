@@ -1,6 +1,7 @@
 from praw import Reddit
 from dotenv import load_dotenv
 from database.postgresql import PostgreSQLClient
+from datetime import datetime, timezone
 import os
 import logging
 import logging_config
@@ -27,8 +28,10 @@ class RedditClient:
     def get_new_posts(self, subreddit: str, limit: int) -> None:
         for submission in self._reddit.subreddit(subreddit).new(limit=limit):
             if not self._database.post_exists(submission.id):
+                created_at = datetime.fromtimestamp(submission.create_utc, tz=timezone.utc)
                 self._database.add_post(
                     submission.id,
+                    created_at,
                     subreddit,
                     submission.title,
                     submission.selftext

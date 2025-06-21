@@ -1,4 +1,5 @@
 from dotenv import load_dotenv
+import datetime
 import psycopg2
 import os
 
@@ -27,12 +28,12 @@ class PostgreSQLClient:
             CREATE TABLE IF NOT EXISTS posts (
                 id SERIAL PRIMARY KEY,
                 post_id TEXT UNIQUE NOT NULL,
+                created_at TIMESTAMPTZ NOT NULL,
                 subreddit TEXT,
                 title TEXT,
                 content TEXT,
                 sentiment TEXT,
-                model_version TEXT,
-                retrieved_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                model_version TEXT
             );
         ''')
         self._conn.commit()
@@ -45,9 +46,9 @@ class PostgreSQLClient:
 
         return self._cursor.fetchone() is not None
 
-    def add_post(self, post_id: str, subreddit: str, title: str, content: str) -> None:
+    def add_post(self, post_id: str, created_at: datetime, subreddit: str, title: str, content: str) -> None:
         self._cursor.execute(
             "INSERT INTO posts (post_id, subreddit, title, content) VALUES (%s, %s, %s, %s)",
-            (post_id, subreddit, title, content)
+            (post_id, created_at, subreddit, title, content)
         )
         self._conn.commit()
