@@ -84,3 +84,10 @@ class PostgreSQLClient:
         result = self._cursor.fetchone()
 
         return result[0] if result else 0
+
+    def remove_post(self, post_id: str) -> None:
+        self._cursor.execute(
+            "DELETE FROM posts WHERE post_id = %s",
+            (post_id,)
+        )
+        self._conn.commit()
