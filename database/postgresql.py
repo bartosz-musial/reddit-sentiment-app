@@ -59,3 +59,11 @@ class PostgreSQLClient:
             (model, sentiment, post_id)
         )
         self._conn.commit()
+
+    def get_unsentimented_posts(self) -> list[str]:
+        self._cursor.execute(
+            "SELECT post_id FROM posts WHERE sentiment IS NULL"
+        )
+        result = self._cursor.fetchall()
+
+        return [row[0] for row in result]
