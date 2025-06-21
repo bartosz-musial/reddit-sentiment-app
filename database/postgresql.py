@@ -85,9 +85,9 @@ class PostgreSQLClient:
 
         return result[0] if result else 0
 
-    def remove_post(self, post_id: str) -> None:
+    def update_post_sentiment_invalid(self, post_id: str, model: str) -> None:
         self._cursor.execute(
-            "DELETE FROM posts WHERE post_id = %s",
-            (post_id,)
+            "UPDATE posts SET model_version = %s, sentiment = %s WHERE post_id = %s",
+            (model, "INVALID", post_id)
         )
         self._conn.commit()
