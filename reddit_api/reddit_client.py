@@ -5,6 +5,7 @@ from datetime import datetime, timezone
 import os
 import logging
 import logging_config
+import time
 
 logging_config.get_config()
 
@@ -37,3 +38,6 @@ class RedditClient:
                     submission.selftext
                 )
                 logging.info(f"Added post {submission.id} from r/{subreddit}")
+                time.sleep(1)
+            logging.info("No more posts to fetch")
+            logging.info(f"Database size: {self._database.get_database_size()}")
