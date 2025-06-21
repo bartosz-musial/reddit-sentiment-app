@@ -19,7 +19,7 @@ class OpenRouter(ABC):
         )
 
     @abstractmethod
-    def _build_prompt(self, post_id: str, **kwargs) -> str:
+    def _build_prompt(self, **kwargs) -> str:
         """
         Generates a prompt appropriate to the task at hand (e.g., sentiment analysis, summary, etc.).
         """
