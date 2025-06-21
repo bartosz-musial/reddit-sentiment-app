@@ -1,9 +1,11 @@
+import time
 from abc import ABC, abstractmethod
 from dotenv import load_dotenv
 from database.postgresql import PostgreSQLClient
 from openai import OpenAI
 from openai.types.chat import ChatCompletionUserMessageParam
 import os
+import logging
 
 load_dotenv()
 
@@ -17,6 +19,17 @@ class OpenRouter(ABC):
             base_url="https://openrouter.ai/api/v1",
             api_key=os.getenv("API_KEY")
         )
+
+    def pipeline(self):
+        posts_id = self._storage.get_unsentimented_posts()
+        logging.info(f"Posts to analyze: {len(posts_id)}")
+        for num, post_id in enumerate(posts_id):
+            title, content = self._storage.get_post_to_analyze(post_id)
+            logging.info(f"Analyzing sentiment for: {post_id} using {self._model}")
+            self._analyze_sentiment(post_id, title=title, content=content)
+            logging.info(f"Queue: {len(posts_id) - num}")
+            time.sleep(5)
+        logging.info(f"Sentiment analysis DONE")
 
     @abstractmethod
     def _build_prompt(self, **kwargs) -> str:
