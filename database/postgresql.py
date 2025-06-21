@@ -48,7 +48,7 @@ class PostgreSQLClient:
 
     def add_post(self, post_id: str, created_at: datetime, subreddit: str, title: str, content: str) -> None:
         self._cursor.execute(
-            "INSERT INTO posts (post_id, subreddit, title, content) VALUES (%s, %s, %s, %s)",
+            "INSERT INTO posts (post_id, created_at, subreddit, title, content) VALUES (%s, %s, %s, %s, %s)",
             (post_id, created_at, subreddit, title, content)
         )
         self._conn.commit()

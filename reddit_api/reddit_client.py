@@ -28,7 +28,7 @@ class RedditClient:
     def get_new_posts(self, subreddit: str, limit: int) -> None:
         for submission in self._reddit.subreddit(subreddit).new(limit=limit):
             if not self._database.post_exists(submission.id):
-                created_at = datetime.fromtimestamp(submission.create_utc, tz=timezone.utc)
+                created_at = datetime.fromtimestamp(submission.created_utc, tz=timezone.utc)
                 self._database.add_post(
                     submission.id,
                     created_at,
