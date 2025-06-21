@@ -76,3 +76,11 @@ class PostgreSQLClient:
         result = self._cursor.fetchone()
 
         return result
+
+    def get_database_size(self) -> int:
+        self._cursor.execute(
+            "SELECT COUNT(*) FROM posts"
+        )
+        result = self._cursor.fetchone()
+
+        return result[0] if result else 0
