@@ -39,5 +39,5 @@ class RedditClient:
                 )
                 logging.info(f"Added post {submission.id} from r/{subreddit}")
                 time.sleep(1)
-            logging.info("No more posts to fetch")
-            logging.info(f"Database size: {self._database.get_database_size()}")
+        logging.info("No more posts to fetch")
+        logging.info(f"Database size: {self._database.get_database_size()}")
