@@ -3,6 +3,13 @@ from apscheduler.triggers.cron import CronTrigger
 from reddit_api.reddit_client import RedditClient
 from openrouter.llama_4_scout import LlamaScout
 import time
+import os
+
+class MissingEnvFileError(Exception):
+    pass
+
+if not os.path.exists(".env"):
+    raise MissingEnvFileError("The .env file was not found!")
 
 def main():
     reddit = RedditClient.from_env()
