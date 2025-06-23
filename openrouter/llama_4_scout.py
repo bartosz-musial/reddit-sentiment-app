@@ -10,11 +10,13 @@ class LlamaScout(OpenRouter):
     def _build_prompt(self, **kwargs) -> str:
         title = kwargs.get("title")
         content = kwargs.get("content")
+        subreddit = kwargs.get("subreddit")
 
         prompt = (
             "Analyze sentiment of this Reddit post using ALL available information:\n"
             f"1. Title: '{title}'\n"
             f"2. Content: '{content}'\n\n"
+            f"3. Subreddit: '{subreddit}'"
             "Consider emotional tone.\n"
             "Return ONLY ONE WORD: POSITIVE, NEUTRAL, or NEGATIVE."
         )

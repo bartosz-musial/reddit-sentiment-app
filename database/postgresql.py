@@ -68,9 +68,9 @@ class PostgreSQLClient:
 
         return [row[0] for row in result]
 
-    def get_post_to_analyze(self, post_id: str) -> tuple[str, str] | None:
+    def get_post_to_analyze(self, post_id: str) -> tuple[str, str, str] | None:
         self._cursor.execute(
-            "SELECT title, content FROM posts WHERE post_id = %s",
+            "SELECT title, content, subreddit FROM posts WHERE post_id = %s",
             (post_id,)
         )
         result = self._cursor.fetchone()

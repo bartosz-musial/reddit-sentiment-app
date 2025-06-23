@@ -24,9 +24,9 @@ class OpenRouter(ABC):
         posts_id = self._storage.get_unsentimented_posts()
         logging.info(f"Posts to analyze: {len(posts_id)}")
         for num, post_id in enumerate(posts_id):
-            title, content = self._storage.get_post_to_analyze(post_id)
+            title, content, subreddit = self._storage.get_post_to_analyze(post_id)
             logging.info(f"Analyzing sentiment for: {post_id} using {self._model}")
-            self._analyze_sentiment(post_id, title=title, content=content)
+            self._analyze_sentiment(post_id, title=title, content=content, subreddit=subreddit)
             logging.info(f"Queue: {len(posts_id) - num}")
             time.sleep(5)
         logging.info(f"Sentiment analysis DONE")
