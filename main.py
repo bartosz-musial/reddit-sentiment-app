@@ -2,8 +2,11 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
 from reddit_api.reddit_client import RedditClient
 from openrouter.llama_4_scout import LlamaScout
+from logging_config.logging_config import get_config
 import time
 import os
+
+get_config()
 
 class MissingEnvFileError(Exception):
     pass
