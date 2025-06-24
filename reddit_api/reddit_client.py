@@ -4,10 +4,7 @@ from database.postgresql import PostgreSQLClient
 from datetime import datetime, timezone
 import os
 import logging
-import logging_config
 import time
-
-logging_config.get_config()
 
 load_dotenv()
 
