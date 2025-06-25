@@ -91,3 +91,9 @@ class PostgreSQLClient:
             (model, "INVALID", post_id)
         )
         self._conn.commit()
+
+    def get_first_non_null_sentiment_record(self):
+        self._cursor.execute(
+            "SELECT * FROM posts WHERE sentiment IS NOT NULL LIMIT 1"
+        )
+        self._conn.commit()
