@@ -2,7 +2,7 @@ import time
 from abc import ABC, abstractmethod
 from dotenv import load_dotenv
 from database.postgresql import PostgreSQLClient
-from openai import OpenAI, AuthenticationError
+from openai import OpenAI, OpenAIError
 from openai.types.chat import ChatCompletionUserMessageParam
 import os
 import logging
@@ -105,6 +105,6 @@ class OpenRouter(ABC):
         try:
             self._test_analyze_sentiment(prompt)
             return True
-        except AuthenticationError:
+        except OpenAIError:
             logging.warning(f"{self._model} not working properly!")
             return False
