@@ -128,7 +128,7 @@ class PostgreSQLClient:
         self._conn.commit()
 
     def get_first_record(self) -> str | None:
-        # Retrieve post_id of the first post that has a non-null sentiment value
+        # Retrieve post_id of the first post
         self._cursor.execute(
             "SELECT post_id FROM posts LIMIT 1"
         )
