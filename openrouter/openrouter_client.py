@@ -1,3 +1,13 @@
+"""
+openrouter_client.py
+
+This module defines the OpenRouter abstract base class that manages
+sentiment analysis workflow using OpenAI-compatible models and PostgreSQL storage.
+
+It fetches unsentimented posts, builds prompts, sends requests to the model,
+validates responses, and updates the database accordingly.
+"""
+
 import time
 from abc import ABC, abstractmethod
 from database.postgresql import PostgreSQLClient
@@ -7,7 +17,25 @@ import os
 import logging
 
 class OpenRouter(ABC):
+    """
+    Abstract base class for OpenAI-based sentiment analysis clients.
+
+    Attributes:
+    - _storage: PostgreSQLClient instance for database operations
+    - _model: model identifier string
+    - _temperature: temperature setting for generation
+    - _max_tokens: max tokens for model responses
+    - _client: OpenAI API client instance
+
+    Methods:
+    - pipeline: process all unsentimented posts from DB
+    - _build_prompt: abstract method to build prompt string (to be implemented in subclass)
+    - _analyze_sentiment: send prompt and update DB with sentiment result
+    - test_sentiment_model: check if the model responds correctly
+    """
+
     def __init__(self):
+        # Initialize DB client and OpenAI client
         self._storage = PostgreSQLClient()
         self._model = None
         self._temperature = None
@@ -18,6 +46,7 @@ class OpenRouter(ABC):
         )
 
     def pipeline(self) -> None:
+        # Analyze all posts without sentiment in DB
         posts_id = self._storage.get_unsentimented_posts()
         logging.info(f"Posts to analyze: {len(posts_id)}")
         for num, post_id in enumerate(posts_id):
@@ -37,6 +66,7 @@ class OpenRouter(ABC):
 
     @staticmethod
     def _test_prompt(**kwargs) -> str:
+        # Template prompt for testing sentiment analysis
         title = kwargs.get("title")
         content = kwargs.get("content")
         subreddit = kwargs.get("subreddit")
@@ -53,6 +83,7 @@ class OpenRouter(ABC):
 
     @staticmethod
     def _messages(prompt: str) -> list[ChatCompletionUserMessageParam]:
+        # Wrap prompt in OpenAI chat message format
         messages: list[ChatCompletionUserMessageParam] = [
             {
                 "role": "user", "content": prompt
@@ -62,6 +93,7 @@ class OpenRouter(ABC):
         return messages
 
     def _analyze_sentiment(self, post_id: str, **kwargs) -> None:
+        # Analyze sentiment and update DB
         prompt = self._build_prompt(**kwargs)
         messages = self._messages(prompt)
 
@@ -79,6 +111,7 @@ class OpenRouter(ABC):
             self._storage.update_post_sentiment_invalid(post_id, self._model)
 
     def _test_analyze_sentiment(self, prompt: str) -> str:
+        # Run a test sentiment query on prompt
         messages = self._messages(prompt)
 
         chat = self._client.chat.completions.create(
@@ -93,9 +126,11 @@ class OpenRouter(ABC):
 
     @staticmethod
     def _sentiment_validation(sentiment: str) -> bool:
+        # Validate sentiment output value
         return sentiment in ("POSITIVE", "NEUTRAL", "NEGATIVE")
 
     def test_sentiment_model(self) -> bool:
+        # Test model functionality using a known post
         post_id = self._storage.get_first_non_null_sentiment_record()
         title, content, subreddit = self._storage.get_post_to_analyze(post_id)
         prompt = self._test_prompt(title=title, content=content, subreddit=subreddit)
