@@ -25,8 +25,36 @@ class SentimentModel(OpenRouter):
         # Initialize with specific model parameters
         super().__init__()
         self._model = model
-        self._temperature = temperature
-        self._max_tokens = max_tokens
+        self.temperature = temperature
+        self.max_tokens = max_tokens
+
+    @property
+    def model(self) -> str:
+        return self._model
+
+    @model.setter
+    def model(self, value: str) -> None:
+        self._model = value
+
+    @property
+    def temperature(self) -> int:
+        return self._temperature
+
+    @temperature.setter
+    def temperature(self, value: int) -> None:
+        if not (0 <= value <= 1):
+            raise ValueError("Temperature must be between 0 and 1!")
+        self._temperature = value
+
+    @property
+    def max_tokens(self) -> int:
+        return self._max_tokens
+
+    @max_tokens.setter
+    def max_tokens(self, value: int) -> None:
+        if not (isinstance(value, int) and value > 0):
+            raise ValueError("max_tokens must be a positive integer!")
+        self._max_tokens = value
 
     def _build_prompt(self, **kwargs) -> str:
         # Build a detailed prompt for sentiment analysis
