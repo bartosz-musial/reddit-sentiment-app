@@ -1,0 +1,58 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_DB: mydb
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U myuser -d mydb"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  reddit-sentiment-app:
+    build:
+      context: .
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: mydb
+      DB_USER: myuser
+      DB_PASSWORD: mypassword
+    volumes:
+      - ./:/app
+    command: ["python", "main.py"]
+
+  sentiment-dashboard:
+    build:
+      context: ./sentiment_dashboard
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: mydb
+      DB_USER: myuser
+      DB_PASSWORD: mypassword
+      STREAMLIT_SERVER_HEADLESS: "true"
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./sentiment_dashboard:/app
+    command: >
+      streamlit run app.py --server.port=8501 --server.address=0.0.0.0
+
+volumes:
+  pgdata:
