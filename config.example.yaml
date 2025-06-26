@@ -1,0 +1,21 @@
+---
+ # List of subreddits to fetch posts from
+ # Example: ["bitcoin", "cryptocurrency"]
+ subreddits:
+   -
+
+ # Maximum number of posts to fetch from each subreddit
+ # Set to 0 to disable fetching posts
+ post_limit: 0
+
+ # Schedule for fetching posts (cron format)
+ # Specify hours (0-23) and minutes (comma-separated)
+ cron_post:
+   hour: ""     # e.g. "0-23"
+   minute: ""   # e.g. "0,30"
+
+ # Schedule for sentiment analysis (cron format)
+ cron_sentiment:
+   hour: ""     # e.g. "0-23"
+   minute: ""   # e.g. "15,45"
+...
