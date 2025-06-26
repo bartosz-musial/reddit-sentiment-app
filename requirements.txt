@@ -1,6 +1,9 @@
+PyYAML~=6.0.2
 APScheduler~=3.11.0
-psycopg2-binary~=2.9.10
 dotenv~=0.9.9
 python-dotenv~=1.1.0
+psycopg2-binary~=2.9.10
 openai~=1.90.0
 praw~=7.8.1
+streamlit~=1.45.1
+plotly~=6.1.2
