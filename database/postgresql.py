@@ -127,11 +127,13 @@ class PostgreSQLClient:
         )
         self._conn.commit()
 
-    def get_first_non_null_sentiment_record(self) -> str:
+    def get_first_record(self) -> str | None:
         # Retrieve post_id of the first post that has a non-null sentiment value
         self._cursor.execute(
-            "SELECT post_id FROM posts WHERE sentiment IS NOT NULL LIMIT 1"
+            "SELECT post_id FROM posts LIMIT 1"
         )
         result = self._cursor.fetchone()
+        if result is None:
+            return None
 
         return result[0]
