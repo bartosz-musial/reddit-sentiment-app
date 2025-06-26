@@ -24,6 +24,21 @@ if not os.path.exists("config.yaml"):
 load_dotenv()
 get_config()
 
+def get_available_sentiment_model() -> LlamaScout | MistralNemo:
+    llama = LlamaScout()
+    mistral = MistralNemo()
+
+    if llama.test_sentiment_model():
+        logging.info("Using meta-llama/llama-4-scout:free")
+        return llama
+    else:
+        logging.info("Using mistralai/mistral-nemo:free")
+        return mistral
+
+def pipeline():
+    main_model = get_available_sentiment_model()
+    main_model.pipeline()
+
 def main():
     with open("config.yaml") as f:
         cfg = yaml.safe_load(f)
@@ -34,14 +49,6 @@ def main():
     cron_post = CronTrigger(**cfg["cron_post"])
     cron_sentiment = CronTrigger(**cfg["cron_sentiment"])
 
-    llama = LlamaScout()
-    mistral = MistralNemo()
-
-    if llama.test_sentiment_model():
-        main_sentiment_model = llama
-    else:
-        main_sentiment_model = mistral
-
     reddit = RedditClient.from_env()
 
     scheduler = BackgroundScheduler()
@@ -49,7 +56,7 @@ def main():
         scheduler.add_job(reddit.get_new_posts, cron_post, args=[subreddit, post_limit])
         logging.info(f"Scheduled job 'get_new_posts' for subreddit r/{subreddit}")
 
-    scheduler.add_job(main_sentiment_model.pipeline, cron_sentiment)
+    scheduler.add_job(pipeline, cron_sentiment)
     scheduler.start()
     try:
         while True:
