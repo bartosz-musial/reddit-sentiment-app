@@ -1,13 +1,10 @@
 import time
 from abc import ABC, abstractmethod
-from dotenv import load_dotenv
 from database.postgresql import PostgreSQLClient
 from openai import OpenAI, OpenAIError
 from openai.types.chat import ChatCompletionUserMessageParam
 import os
 import logging
-
-load_dotenv()
 
 class OpenRouter(ABC):
     def __init__(self):

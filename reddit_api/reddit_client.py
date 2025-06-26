@@ -1,12 +1,9 @@
 from praw import Reddit
-from dotenv import load_dotenv
 from database.postgresql import PostgreSQLClient
 from datetime import datetime, timezone
 import os
 import logging
 import time
-
-load_dotenv()
 
 class RedditClient:
     def __init__(self, reddit_client: Reddit):

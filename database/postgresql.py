@@ -1,9 +1,6 @@
-from dotenv import load_dotenv
 import datetime
 import psycopg2
 import os
-
-load_dotenv()
 
 class PostgreSQLClient:
     def __init__(self):
