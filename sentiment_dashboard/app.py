@@ -1,3 +1,11 @@
+"""
+app.py
+
+Streamlit application for visualizing Reddit sentiment analysis results.
+Connects to PostgreSQL database, fetches subreddit data and sentiment stats,
+and displays metrics and pie charts using Plotly.
+"""
+
 from dotenv import load_dotenv
 import streamlit as st
 import psycopg2
@@ -8,6 +16,7 @@ load_dotenv()
 
 @st.cache_resource
 def get_db_connection():
+    # Establish and cache a connection to the PostgreSQL database
     conn = psycopg2.connect(
         host=os.getenv("DB_HOST"),
         dbname=os.getenv("DB_NAME"),
@@ -19,12 +28,14 @@ def get_db_connection():
 
 @st.cache_data(ttl=900)
 def get_subreddits(_conn):
+    # Fetch distinct subreddit names from the posts table
     with _conn.cursor() as cur:
         cur.execute("SELECT DISTINCT subreddit FROM posts")
         return [row[0] for row in cur.fetchall()]
 
 @st.cache_data(ttl=900)
 def get_sentiment_stats(_conn, subreddit):
+    # Retrieve sentiment counts and percentages for a given subreddit
     with _conn.cursor() as cur:
         query = """
             SELECT
@@ -37,6 +48,7 @@ def get_sentiment_stats(_conn, subreddit):
         """
         cur.execute(query, (subreddit,))
 
+        # Initialize stats dictionary with default zero values
         stats = {
             "POSITIVE": {'percentage': 0, 'count': 0},
             "NEUTRAL": {'percentage': 0, 'count': 0},
@@ -52,6 +64,7 @@ def get_sentiment_stats(_conn, subreddit):
         return stats
 
 def main():
+    # Main Streamlit app function
     st.title("Reddit Sentiment Analysis Dashboard")
 
     conn = get_db_connection()
