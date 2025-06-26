@@ -17,7 +17,7 @@ class OpenRouter(ABC):
             api_key=os.getenv("API_KEY")
         )
 
-    def pipeline(self):
+    def pipeline(self) -> None:
         posts_id = self._storage.get_unsentimented_posts()
         logging.info(f"Posts to analyze: {len(posts_id)}")
         for num, post_id in enumerate(posts_id):
@@ -36,7 +36,7 @@ class OpenRouter(ABC):
         pass
 
     @staticmethod
-    def _test_prompt(**kwargs):
+    def _test_prompt(**kwargs) -> str:
         title = kwargs.get("title")
         content = kwargs.get("content")
         subreddit = kwargs.get("subreddit")
@@ -61,7 +61,7 @@ class OpenRouter(ABC):
 
         return messages
 
-    def _analyze_sentiment(self, post_id: str, **kwargs):
+    def _analyze_sentiment(self, post_id: str, **kwargs) -> None:
         prompt = self._build_prompt(**kwargs)
         messages = self._messages(prompt)
 
