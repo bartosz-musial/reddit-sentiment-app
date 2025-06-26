@@ -24,19 +24,24 @@ if not os.path.exists("config.yaml"):
 load_dotenv()
 get_config()
 
-def get_available_sentiment_model() -> LlamaScout | MistralNemo:
+def get_available_sentiment_model() -> LlamaScout | MistralNemo | None:
     llama = LlamaScout()
     mistral = MistralNemo()
 
     if llama.test_sentiment_model():
         logging.info("Using meta-llama/llama-4-scout:free")
         return llama
-    else:
+    elif mistral.test_sentiment_model():
         logging.info("Using mistralai/mistral-nemo:free")
         return mistral
+    else:
+        logging.error("No available sentiment model found!")
+        return None
 
 def pipeline():
     main_model = get_available_sentiment_model()
+    if main_model is None:
+        return
     main_model.pipeline()
 
 def main():
