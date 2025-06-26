@@ -30,28 +30,36 @@ class SentimentModel(OpenRouter):
 
     @property
     def model(self) -> str:
+        # Getter for the model attribute — returns the model identifier
         return self._model
 
     @model.setter
     def model(self, value: str) -> None:
+        # Setter for model — allows changing the model without validation (can be added later)
         self._model = value
 
     @property
     def temperature(self) -> int:
+        # Getter for temperature — returns the current generation temperature
         return self._temperature
 
     @temperature.setter
     def temperature(self, value: int) -> None:
+        # Setter for temperature with validation
+        # Value must be between 0 and 1 inclusive, otherwise raises ValueError
         if not (0 <= value <= 1):
             raise ValueError("Temperature must be between 0 and 1!")
         self._temperature = value
 
     @property
     def max_tokens(self) -> int:
+        # Getter for max_tokens — returns the maximum number of tokens allowed
         return self._max_tokens
 
     @max_tokens.setter
     def max_tokens(self, value: int) -> None:
+        # Setter for max_tokens with validation
+        # Value must be a positive integer, otherwise raises ValueError
         if not (isinstance(value, int) and value > 0):
             raise ValueError("max_tokens must be a positive integer!")
         self._max_tokens = value
