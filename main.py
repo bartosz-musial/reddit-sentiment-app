@@ -3,9 +3,11 @@ from apscheduler.triggers.cron import CronTrigger
 from reddit_api.reddit_client import RedditClient
 from openrouter.models import LlamaScout, MistralNemo
 from logging_config.logging_config import get_config
+from dotenv import load_dotenv
 import time
 import os
 
+load_dotenv()
 get_config()
 
 class MissingEnvFileError(Exception):
