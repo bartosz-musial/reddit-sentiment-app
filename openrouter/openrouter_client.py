@@ -47,13 +47,18 @@ class OpenRouter(ABC):
 
     def pipeline(self) -> None:
         # Analyze all posts without sentiment in DB
+        if self._check_if_empty_db():
+            logging.warning(f"Empty database!")
+            return
+
         posts_id = self._storage.get_unsentimented_posts()
         logging.info(f"Posts to analyze: {len(posts_id)}")
+
         for num, post_id in enumerate(posts_id):
             title, content, subreddit = self._storage.get_post_to_analyze(post_id)
             logging.info(f"Analyzing sentiment for: {post_id} using {self._model}")
             self._analyze_sentiment(post_id, title=title, content=content, subreddit=subreddit)
-            logging.info(f"Queue: {len(posts_id) - num}")
+            logging.info(f"Queue: {len(posts_id) - num - 1}")
             time.sleep(5)
         logging.info(f"Sentiment analysis DONE")
 
@@ -131,7 +136,9 @@ class OpenRouter(ABC):
 
     def test_sentiment_model(self) -> bool:
         # Test model functionality using a known post
-        post_id = self._storage.get_first_non_null_sentiment_record()
+        post_id = self._storage.get_first_record()
+        if post_id is None:
+            return False
         title, content, subreddit = self._storage.get_post_to_analyze(post_id)
         prompt = self._test_prompt(title=title, content=content, subreddit=subreddit)
         try:
@@ -140,3 +147,7 @@ class OpenRouter(ABC):
         except OpenAIError:
             logging.warning(f"{self._model} not working properly!")
             return False
+
+    def _check_if_empty_db(self) -> bool:
+        # Returns True if the database has no records
+        return self._storage.get_database_size() == 0
