@@ -1,7 +1,20 @@
+"""
+logger_config.py
+
+This module configures the root logger with a custom stream handler
+using the CustomFormatted formatter for colored log output.
+
+It also sets log levels to ERROR for specified noisy libraries to reduce verbosity.
+"""
+
 from .colour_logging import CustomFormatted
 import logging
 
 def get_config():
+    """
+    Set up logging configuration with custom formatting and
+    reduced log verbosity for selected libraries.
+    """
     handler = logging.StreamHandler()
     handler.setFormatter(CustomFormatted())
     logging.basicConfig(
