@@ -1,8 +1,8 @@
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
-from backend.reddit_api.reddit_client import RedditClient
-from backend.openrouter.models import LlamaScout, MistralNemo
-from backend.logging_config import get_config
+from reddit_api.reddit_client import RedditClient
+from openrouter.models import LlamaScout, MistralNemo
+from logging_config.logging_config import get_config
 from dotenv import load_dotenv
 import time
 import os
@@ -21,7 +21,7 @@ if not os.path.exists("config/.env"):
 if not os.path.exists("config/config.yaml"):
     raise MissingConfigFileError("The config.yaml file was not found!")
 
-load_dotenv()
+load_dotenv(dotenv_path='config/.env')
 get_config()
 
 def get_available_sentiment_model() -> LlamaScout | MistralNemo | None:
