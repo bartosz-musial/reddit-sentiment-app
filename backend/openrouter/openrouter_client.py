@@ -10,7 +10,7 @@ validates responses, and updates the database accordingly.
 
 import time
 from abc import ABC, abstractmethod
-from database.postgresql import PostgreSQLClient
+from backend.database.postgresql import PostgreSQLClient
 from openai import OpenAI, OpenAIError
 from openai.types.chat import ChatCompletionUserMessageParam
 import os

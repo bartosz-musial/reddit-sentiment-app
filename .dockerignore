@@ -11,7 +11,7 @@
 
 # Docker
 docker-compose.yml
-Dockerfile
+backend/Dockerfile
 .docker
 .dockerignore
 
@@ -71,7 +71,7 @@ docs/_build/
 target/
 
 # Virtual environment
-.env
+backend/config/.env
 .venv/
 venv/
 

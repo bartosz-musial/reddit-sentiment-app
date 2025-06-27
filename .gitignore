@@ -128,7 +128,7 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-.env
+backend/config/.env
 .venv
 env/
 venv/
@@ -194,4 +194,4 @@ cython_debug/
 .cursorindexingignore
 
 # Local configuration file (excluded from version control)
-config.yaml
+backend/config/config.yaml

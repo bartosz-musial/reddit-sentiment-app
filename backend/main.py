@@ -1,8 +1,8 @@
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
-from reddit_api.reddit_client import RedditClient
-from openrouter.models import LlamaScout, MistralNemo
-from logging_config.logging_config import get_config
+from backend.reddit_api.reddit_client import RedditClient
+from backend.openrouter.models import LlamaScout, MistralNemo
+from backend.logging_config import get_config
 from dotenv import load_dotenv
 import time
 import os
@@ -15,10 +15,10 @@ class MissingEnvFileError(Exception):
 class MissingConfigFileError(Exception):
     pass
 
-if not os.path.exists(".env"):
+if not os.path.exists("config/.env"):
     raise MissingEnvFileError("The .env file was not found!")
 
-if not os.path.exists("config.yaml"):
+if not os.path.exists("config/config.yaml"):
     raise MissingConfigFileError("The config.yaml file was not found!")
 
 load_dotenv()
@@ -45,7 +45,7 @@ def pipeline():
     main_model.pipeline()
 
 def main():
-    with open("config.yaml") as f:
+    with open("config/config.yaml") as f:
         cfg = yaml.safe_load(f)
 
     subreddits = cfg["subreddits"]

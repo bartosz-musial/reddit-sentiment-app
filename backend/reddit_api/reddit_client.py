@@ -6,7 +6,7 @@ from specified subreddits using the PRAW library and storing them in a PostgreSQ
 """
 
 from praw import Reddit
-from database.postgresql import PostgreSQLClient
+from backend.database.postgresql import PostgreSQLClient
 from datetime import datetime, timezone
 import os
 import logging
